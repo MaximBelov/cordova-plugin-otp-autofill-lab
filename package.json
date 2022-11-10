@@ -1,0 +1,71 @@
+{
+  "name": "cordova-plugin-otp-autofill-lab",
+  "version": "0.0.1",
+  "author": "Maxim Belov",
+  "homepage": "https://github.com/MaximBelov/cordova-plugin-otp-autofill-lab",
+  "description": "A demo application for the cordova-plugin-otp-autofill",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:android": "ionic cordova build android",
+    "add:ios": "ionic cordova platform add ios",
+    "build:ios": "ionic cordova build ios --debug --verbose",
+    "run:ios": "ionic cordova run ios --livereload --external --verbose",
+    "run:ios:device": "ionic cordova run ios --device",
+    "run:android": "ionic cordova run android --livereload --verbose"
+  },
+  "dependencies": {
+    "@angular/common": "14.2.0",
+    "@angular/core": "14.2.0",
+    "@angular/forms": "14.2.0",
+    "@angular/platform-browser": "14.2.0",
+    "@angular/platform-browser-dynamic": "14.2.0",
+    "@angular/router": "14.2.0",
+    "@awesome-cordova-plugins/core": "5.45.0",
+    "@awesome-cordova-plugins/ionic-webview": "5.45.0",
+    "@awesome-cordova-plugins/splash-screen": "5.45.0",
+    "@awesome-cordova-plugins/status-bar": "5.45.0",
+    "@ionic/angular": "6.2.5",
+    "core-js": "3.25.0",
+    "rxjs": "7.5.6",
+    "tslib": "2.4.0",
+    "zone.js": "0.11.8"
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "0.1402.1",
+    "@angular-devkit/build-angular": "14.2.1",
+    "@angular-devkit/core": "14.2.1",
+    "@angular-devkit/schematics": "14.2.1",
+    "@angular/cli": "14.2.1",
+    "@angular/compiler": "14.2.0",
+    "@angular/compiler-cli": "14.2.0",
+    "@angular/language-service": "14.2.0",
+    "@ionic/angular-toolkit": "7.0.0",
+    "@ionic/cordova-builders": "7.0.0",
+    "@types/node": "18.7.15",
+    "ajv": "8.8.2",
+    "cordova-android": "11.0.0",
+    "cordova-ios": "6.2.0",
+    "cordova-plugin-device": "2.1.0",
+    "cordova-plugin-ionic-keyboard": "^2.2.0",
+    "cordova-plugin-ionic-webview": "5.0.0",
+    "cordova-plugin-statusbar": "3.0.0",
+    "ts-node": "10.9.1",
+    "tslint": "6.1.3",
+    "typescript": "4.8.2"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {}
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  }
+}

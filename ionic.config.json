@@ -1,0 +1,7 @@
+{
+  "name": "cordova-plugin-otp-autofill-lab",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
