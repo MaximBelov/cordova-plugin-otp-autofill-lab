@@ -8,11 +8,16 @@
 
 <ion-content>
     <ion-label>one-time-code</ion-label>
-    <input id="single-factor-code-text-field" autocomplete="one-time-code"/>
+<!--    <input id="single-factor-code-text-field" autocomplete="one-time-code"/>-->
+    <ng-otp-input  (onInputChange)="onOtpChange($event)"  [config]="{length:4, allowNumbersOnly: true}"></ng-otp-input>
 
-<!--    <ion-item counter="true">-->
-<!--        <ion-label position="floating">Default Counter</ion-label>-->
-<!--        <ion-input maxlength="20" autocomplete="one-time-code"></ion-input>-->
-<!--    </ion-item>-->
+    <ion-button *ngIf="isAndroid" (click)="appGetHashString()">
+        <ion-label>get app hash string</ion-label>
+        <input value="{{hashString}}">
+    </ion-button>
+
+    <ion-button *ngIf="isAndroid" (click)="appStartWatch()">
+        <ion-label>start watch</ion-label>
+    </ion-button>
 
 </ion-content>
