@@ -29,7 +29,7 @@
     "@awesome-cordova-plugins/splash-screen": "5.45.0",
     "@awesome-cordova-plugins/status-bar": "5.45.0",
     "@ionic/angular": "6.2.5",
-    "awesome-cordova-plugins-sms-retriever-az": "5.45.5",
+    "awesome-cordova-plugins-sms-retriever-az": "5.45.8",
     "core-js": "3.25.0",
     "ng-otp-input": "^1.8.5",
     "rxjs": "7.5.6",

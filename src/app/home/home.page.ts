@@ -1,10 +1,10 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, ElementRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { SmsRetrieverAz } from 'awesome-cordova-plugins-sms-retriever-az/ngx';
+import { SmsRetrieverAz, SmsRetrieverStatus } from 'awesome-cordova-plugins-sms-retriever-az/ngx';
 import { NgOtpInputComponent } from 'ng-otp-input';
+import { Subscription } from 'rxjs';
 
 // https://github.com/andreszs/cordova-plugin-demos/blob/main/com.andreszs.smsretriever.demo/www/js/index.js
-declare const window: any;
 
 @Component({
     selector: 'app-home',
@@ -14,11 +14,14 @@ declare const window: any;
 export class HomePage {
 
     @ViewChild(NgOtpInputComponent) ngOtpInput: NgOtpInputComponent;
+    @ViewChild('oneTimeCode') oneTimeCode: ElementRef;
 
-    hashString = '';
+    public hashString = '';
+    public isRetrieverStarted = false;
 
     private readonly platform = this.injector.get(Platform);
     private readonly smsRetrieverAz = this.injector.get(SmsRetrieverAz);
+    private readonly subscriptions$ = new Subscription();
 
     public readonly isAndroid = this.platform.is('android');
 
@@ -27,14 +30,21 @@ export class HomePage {
             .ready()
             .then(() => {
                 if (this.isAndroid) {
-                    document.addEventListener('onSMSArrive',  (_event) => {
-                        console.log('onSMSArrive', _event);
-                        // @ts-ignore
-                        const [ otp ] = _event.message.match(/[\dA-Za-z]*\d+[\dA-Za-z]*/) || []
-                        if(otp){
+                    this.smsRetrieverAz.onSMSArrive().subscribe(value => {
+                        this.isRetrieverStarted = false;
+                        const [otp] = value.message.match(/[\dA-Za-z]*\d+[\dA-Za-z]*/) || [];
+                        if (otp) {
                             this.ngOtpInput.setValue(otp);
+                            this.oneTimeCode.nativeElement.value = otp;
                         }
-                    });
+
+                        const [, , password] = value.message.match(/(password is )(\b\w+)/) || [];
+                        if (password) {
+                            this.ngOtpInput.setValue(password);
+                            this.oneTimeCode.nativeElement.value = password;
+                        }
+
+                    })
                 }
             })
             .catch((error) => {
@@ -42,29 +52,31 @@ export class HomePage {
             });
     }
 
-    onOtpChange(event: string){
+    onOtpChange(event: string) {
         console.log('onOtpChange', event);
     }
 
-    async appGetHashString(){
-        const successCallback = function (strSuccess) {
-            console.log(strSuccess);
-        };
-        const errorCallback = function (strError) {
-            console.error(strError);
-        };
-        window.cordova.plugins.SMSRetriever.getHashString(successCallback, errorCallback);
+    async appGetHashString() {
         this.hashString = await this.smsRetrieverAz.getHashString();
     }
 
-    appStartWatch(){
-        const onSuccess = function (strSuccess) {
-            console.log(strSuccess);
-        };
-        const onFail = function (strError) {
-            console.error(strError);
-        };
-        window.cordova.plugins.SMSRetriever.startWatch(onSuccess, onFail);
+    appStartWatch() {
+        if (this.isRetrieverStarted) {
+            return;
+        }
+        this.isRetrieverStarted = true;
+        const subs = this.smsRetrieverAz.startWatch().subscribe({
+            next: (status) => {
+                console.log(status)
+                this.isRetrieverStarted = status !== SmsRetrieverStatus.Done;
+            },
+            error: (error) => {
+                console.error(error)
+                this.isRetrieverStarted = false;
+            },
+            complete: () => console.info('complete')
+        })
+        this.subscriptions$.add(subs);
     }
 
 }

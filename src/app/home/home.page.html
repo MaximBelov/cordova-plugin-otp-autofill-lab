@@ -1,23 +1,42 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            Ionic Blank
+            SMS Retriever
         </ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-label>one-time-code</ion-label>
-<!--    <input id="single-factor-code-text-field" autocomplete="one-time-code"/>-->
-    <ng-otp-input  (onInputChange)="onOtpChange($event)"  [config]="{length:4, allowNumbersOnly: true}"></ng-otp-input>
 
-    <ion-button *ngIf="isAndroid" (click)="appGetHashString()">
-        <ion-label>get app hash string</ion-label>
-        <input value="{{hashString}}">
-    </ion-button>
+    <ion-item>
+        <ion-label>one-time-code</ion-label>
+        <input #oneTimeCode id="single-factor-code-text-field" autocomplete="one-time-code"/>
+    </ion-item>
 
-    <ion-button *ngIf="isAndroid" (click)="appStartWatch()">
-        <ion-label>start watch</ion-label>
-    </ion-button>
+    <ion-item>
+        <ion-label>ng-otp-input</ion-label>
+        <ng-otp-input (onInputChange)="onOtpChange($event)" [config]="{ length:4, disableAutoFocus: true }"></ng-otp-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-button *ngIf="isAndroid" (click)="appGetHashString()">
+            <ion-label>get app hash string</ion-label>
+        </ion-button>
+    </ion-item>
+
+    <ion-item *ngIf="hashString">
+        <ion-label>hash string</ion-label>
+        <ion-input [readonly]="true" value="{{hashString}}"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="isAndroid">
+        <ion-label>retriever started: {{isRetrieverStarted}}</ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="isAndroid">
+        <ion-button (click)="appStartWatch()">
+            <ion-label>start watch</ion-label>
+        </ion-button>
+    </ion-item>
 
 </ion-content>
