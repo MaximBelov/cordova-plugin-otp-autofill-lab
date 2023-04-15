@@ -12,4 +12,18 @@ Send sms with twilio
 
 1. Add values 
 
-adb emu sms send "+351910000001" "Code: 1234 \n\nFPyKGZ41fqX"
+## Send real sms
+
+```shell
+
+npm run sendReadlSms
+
+```
+
+## Send sms to emulator
+
+```shell
+
+npm run sendEmulatorSms
+
+```
