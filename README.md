@@ -11,3 +11,5 @@ Send sms with twilio
 1. `cp .env-example .env`
 
 1. Add values 
+
+adb emu sms send "+351910000001" "Code: 1234 \n\nFPyKGZ41fqX"

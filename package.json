@@ -9,13 +9,15 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "cleanUp": "rm -rf {platforms, plugins}",
     "build:android": "ionic cordova build android",
     "add:ios": "ionic cordova platform add ios",
     "build:ios": "ionic cordova build ios --debug --verbose",
     "run:ios": "ionic cordova run ios --livereload --external --verbose",
     "run:ios:device": "ionic cordova run ios --device",
     "run:android": "ionic cordova run android --livereload --verbose",
-    "sendSms": "node ./scripts/send-sms.js"
+    "sendReadlSms": "node ./scripts/send-sms.js",
+    "sendEmulatorSms": "./scripts/send-emulator-sms.sh"
   },
   "dependencies": {
     "@angular/common": "14.2.0",
@@ -29,7 +31,7 @@
     "@awesome-cordova-plugins/splash-screen": "5.45.0",
     "@awesome-cordova-plugins/status-bar": "5.45.0",
     "@ionic/angular": "6.2.5",
-    "awesome-cordova-plugins-sms-retriever-az": "5.45.8",
+    "awesome-cordova-plugins-sms-retriever-az": "5.45.10",
     "core-js": "3.25.0",
     "ng-otp-input": "^1.8.5",
     "rxjs": "7.5.6",
@@ -54,7 +56,7 @@
     "cordova-plugin-device": "2.1.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "5.0.0",
-    "cordova-plugin-sms-retriever": "^2.0.1",
+    "cordova-plugin-sms-retriever": "git+https://github.com/herdwatch-apps/cordova-plugin-sms-retriever.git#3.0.0-custom",
     "cordova-plugin-statusbar": "3.0.0",
     "dotenv": "^16.0.3",
     "ts-node": "10.9.1",
@@ -68,9 +70,7 @@
       "cordova-plugin-device": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-sms-retriever": {
-        "PLAY_SERVICES_VERSION": "18.0.1"
-      }
+      "cordova-plugin-sms-retriever": {}
     },
     "platforms": [
       "ios",

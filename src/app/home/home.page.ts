@@ -1,27 +1,31 @@
-import { Component, Injector, ViewChild, ElementRef } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, Injector, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Platform, ViewWillEnter, ViewDidEnter } from '@ionic/angular';
 import { SmsRetrieverAz, SmsRetrieverStatus } from 'awesome-cordova-plugins-sms-retriever-az/ngx';
 import { NgOtpInputComponent } from 'ng-otp-input';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 // https://github.com/andreszs/cordova-plugin-demos/blob/main/com.andreszs.smsretriever.demo/www/js/index.js
+
+declare const cordova: any;
 
 @Component({
     selector: 'app-home',
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements ViewWillEnter, ViewDidEnter {
 
     @ViewChild(NgOtpInputComponent) ngOtpInput: NgOtpInputComponent;
     @ViewChild('oneTimeCode') oneTimeCode: ElementRef;
 
     public hashString = '';
-    public isRetrieverStarted = false;
+    public phoneNumber = '';
+    public isRetrieverStarted = new BehaviorSubject(false);
 
+    private readonly changeDetectorRef = this.injector.get(ChangeDetectorRef);
     private readonly platform = this.injector.get(Platform);
     private readonly smsRetrieverAz = this.injector.get(SmsRetrieverAz);
-    private readonly subscriptions$ = new Subscription();
+    private subscription$: Subscription;
 
     public readonly isAndroid = this.platform.is('android');
 
@@ -31,7 +35,6 @@ export class HomePage {
             .then(() => {
                 if (this.isAndroid) {
                     this.smsRetrieverAz.onSMSArrive().subscribe(value => {
-                        this.isRetrieverStarted = false;
                         const [otp] = value.message.match(/[\dA-Za-z]*\d+[\dA-Za-z]*/) || [];
                         if (otp) {
                             this.ngOtpInput.setValue(otp);
@@ -52,6 +55,13 @@ export class HomePage {
             });
     }
 
+    ionViewWillEnter() {
+    }
+
+    ionViewDidEnter() {
+        this.appStartWatch();
+    }
+
     onOtpChange(event: string) {
         console.log('onOtpChange', event);
     }
@@ -61,22 +71,39 @@ export class HomePage {
     }
 
     appStartWatch() {
-        if (this.isRetrieverStarted) {
+        if (this.isRetrieverStarted.value) {
             return;
         }
-        this.isRetrieverStarted = true;
-        const subs = this.smsRetrieverAz.startWatch().subscribe({
+        this.isRetrieverStarted.next(true);
+        this.changeDetectorRef.detectChanges();
+        this.subscription$ = this.smsRetrieverAz.startWatch().subscribe({
             next: (status) => {
-                console.log(status)
-                this.isRetrieverStarted = status !== SmsRetrieverStatus.Done;
+                console.log(status);
+                this.isRetrieverStarted.next( status !== SmsRetrieverStatus.Done);
+                this.changeDetectorRef.detectChanges();
+                if (status === SmsRetrieverStatus.Done || status === SmsRetrieverStatus.AlreadyStarted) {
+                    this.subscription$.unsubscribe();
+                }
             },
             error: (error) => {
                 console.error(error)
-                this.isRetrieverStarted = false;
+                this.isRetrieverStarted.next(false);
+                this.changeDetectorRef.detectChanges();
+                this.subscription$.unsubscribe();
             },
             complete: () => console.info('complete')
         })
-        this.subscriptions$.add(subs);
+    }
+
+    async appStopWatch(){
+        const result = await this.smsRetrieverAz.stopWatch();
+        console.log('appStopWatch', result);
+    }
+
+    async appGetPhoneNumber(){
+        this.phoneNumber = await this.smsRetrieverAz.getPhoneNumber();
+        this.changeDetectorRef.detectChanges();
+        console.log(this.phoneNumber);
     }
 
 }
