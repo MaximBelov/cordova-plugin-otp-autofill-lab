@@ -1,6 +1,6 @@
 import { Component, Injector, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Platform, ViewWillEnter, ViewDidEnter } from '@ionic/angular';
-import { SmsRetrieverAz, SmsRetrieverStatus } from 'awesome-cordova-plugins-sms-retriever-az/ngx';
+import { SmsRetrieverApi, SmsRetrieverStatus } from 'awesome-cordova-plugins-sms-retriever-api/ngx';
 import { NgOtpInputComponent } from 'ng-otp-input';
 import { Subscription, BehaviorSubject } from 'rxjs';
 
@@ -24,7 +24,7 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
 
     private readonly changeDetectorRef = this.injector.get(ChangeDetectorRef);
     private readonly platform = this.injector.get(Platform);
-    private readonly smsRetrieverAz = this.injector.get(SmsRetrieverAz);
+    private readonly smsRetrieverApi = this.injector.get(SmsRetrieverApi);
     private subscription$: Subscription;
 
     public readonly isAndroid = this.platform.is('android');
@@ -34,7 +34,7 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
             .ready()
             .then(() => {
                 if (this.isAndroid) {
-                    this.smsRetrieverAz.onSMSArrive().subscribe(value => {
+                    this.smsRetrieverApi.onSMSArrive().subscribe(value => {
                         const [otp] = value.message.match(/[\dA-Za-z]*\d+[\dA-Za-z]*/) || [];
                         if (otp) {
                             this.ngOtpInput.setValue(otp);
@@ -67,16 +67,18 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
     }
 
     async appGetHashString() {
-        this.hashString = await this.smsRetrieverAz.getHashString();
+        this.hashString = await this.smsRetrieverApi.getHashString();
     }
 
     appStartWatch() {
         if (this.isRetrieverStarted.value) {
             return;
         }
+        this.ngOtpInput.setValue('');
+        this.oneTimeCode.nativeElement.value = '';
         this.isRetrieverStarted.next(true);
         this.changeDetectorRef.detectChanges();
-        this.subscription$ = this.smsRetrieverAz.startWatch().subscribe({
+        this.subscription$ = this.smsRetrieverApi.startWatch().subscribe({
             next: (status) => {
                 console.log(status);
                 this.isRetrieverStarted.next( status !== SmsRetrieverStatus.Done);
@@ -96,12 +98,12 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
     }
 
     async appStopWatch(){
-        const result = await this.smsRetrieverAz.stopWatch();
+        const result = await this.smsRetrieverApi.stopWatch();
         console.log('appStopWatch', result);
     }
 
     async appGetPhoneNumber(){
-        this.phoneNumber = await this.smsRetrieverAz.getPhoneNumber();
+        this.phoneNumber = await this.smsRetrieverApi.getPhoneNumber();
         this.changeDetectorRef.detectChanges();
         console.log(this.phoneNumber);
     }
