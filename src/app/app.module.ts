@@ -6,7 +6,7 @@ import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {SplashScreen} from '@awesome-cordova-plugins/splash-screen/ngx';
 import {StatusBar} from '@awesome-cordova-plugins/status-bar/ngx';
 import { WebView } from '@awesome-cordova-plugins/ionic-webview/ngx';
-import { SmsRetrieverApi } from 'awesome-cordova-plugins-sms-retriever-api/ngx';
+import { SmsRetrieverApi } from '@awesome-cordova-plugins/sms-retriever-api/ngx';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';

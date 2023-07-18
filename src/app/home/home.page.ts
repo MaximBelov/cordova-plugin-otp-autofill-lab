@@ -1,6 +1,6 @@
 import { Component, Injector, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Platform, ViewWillEnter, ViewDidEnter } from '@ionic/angular';
-import { SmsRetrieverApi, SmsRetrieverStatus } from 'awesome-cordova-plugins-sms-retriever-api/ngx';
+import { SmsRetrieverApi, SmsRetrieverStatus } from '@awesome-cordova-plugins/sms-retriever-api/ngx';
 import { NgOtpInputComponent } from 'ng-otp-input';
 import { Subscription, BehaviorSubject } from 'rxjs';
 

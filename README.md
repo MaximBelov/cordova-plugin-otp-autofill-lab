@@ -1,6 +1,6 @@
 # Cordova plugin Sms Retriever Lab
 
-A demo application for the [cordova-plugin-sms-retriever-lab](https://github.com/MaximBelov/cordova-plugin-sms-retriever).
+A demo application for the [cordova-plugin-sms-retriever](https://github.com/MaximBelov/cordova-plugin-sms-retriever).
 
 Useful if you want to try out the plugin or want to reproduce a bug or build errors.
 
