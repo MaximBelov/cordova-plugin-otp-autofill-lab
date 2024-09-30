@@ -16,7 +16,7 @@ Send sms with twilio
 
 ```shell
 
-npm run sendReadlSms
+npm run sendTwilioSms
 
 ```
 
